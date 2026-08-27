@@ -33,16 +33,20 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm space-y-4">
-        <h1 className="text-2xl font-bold text-gray-800">Create account</h1>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+    /* 1. Changed bg-gray-50 to bg-base-200 */
+    <div className="min-h-screen flex items-center justify-center bg-base-200">
+      {/* 2. Changed bg-white to bg-base-100 */}
+      <form onSubmit={handleSubmit} className="bg-base-100 p-8 rounded-lg shadow-md w-full max-w-sm space-y-4">
+        {/* 3. Changed text-gray-800 to text-base-content */}
+        <h1 className="text-2xl font-bold text-base-content">Create account</h1>
+        {error && <p className="text-error text-sm">{error}</p>}
+        {/* 4. Swapped standard borders for input utility components */}
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="input input-bordered w-full"
           required
         />
         <input
@@ -50,19 +54,21 @@ export default function Register() {
           placeholder="Password (min 6 characters)"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="input input-bordered w-full"
           required
         />
+        {/* 5. Swapped hardcoded background for btn components */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+          className="btn btn-primary w-full"
         >
           {loading ? 'Creating account...' : 'Register'}
         </button>
-        <p className="text-sm text-gray-500 text-center">
+        {/* 6. Changed text-gray-500 to text-base-content with lower opacity */}
+        <p className="text-sm text-base-content/70 text-center">
           Already have an account?{' '}
-          <Link href="/login" className="text-blue-600 hover:underline">
+          <Link href="/login" className="link link-primary">
             Login
           </Link>
         </p>

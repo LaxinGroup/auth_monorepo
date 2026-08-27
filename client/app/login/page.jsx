@@ -20,6 +20,7 @@ export default function LoginPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
+      console.log(process.env.NEXT_PUBLIC_API_URL);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Login failed');
 
@@ -33,16 +34,21 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm space-y-4">
-        <h1 className="text-2xl font-bold text-gray-800">Log in</h1>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+    /* 1. Changed bg-gray-50 to bg-base-200 */
+    <div className="min-h-screen flex items-center justify-center bg-base-200">
+      {/* 2. Changed bg-white to bg-base-100 */}
+      <form onSubmit={handleSubmit} className="bg-base-100 p-8 rounded-lg shadow-md w-full max-w-sm space-y-4">
+        {/* 3. Changed text-gray-800 to text-base-content */}
+        <h1 className="text-2xl font-bold text-base-content">Log in</h1>
+        {/* 4. Changed text-red-500 to text-error */}
+        {error && <p className="text-error text-sm">{error}</p>}
+        {/* 5. Swapped raw borders for DaisyUI input styling */}
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="input input-bordered w-full"
           required
         />
         <input
@@ -50,19 +56,21 @@ export default function LoginPage() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="input input-bordered w-full"
           required
         />
+        {/* 6. Changed background colors to use btn-neutral / btn component hooks */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-gray-800 text-white py-2 rounded hover:bg-gray-900 disabled:opacity-50"
+          className="btn btn-neutral w-full"
         >
           {loading ? 'Logging in...' : 'Login'}
         </button>
-        <p className="text-sm text-gray-500 text-center">
+        {/* 7. Altered text color to scale with the active theme */}
+        <p className="text-sm text-base-content/70 text-center">
           No account yet?{' '}
-          <Link href="/register" className="text-blue-600 hover:underline">
+          <Link href="/register" className="link link-primary">
             Register
           </Link>
         </p>

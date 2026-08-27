@@ -35,20 +35,28 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm text-center space-y-4">
-        <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+    /* 1. Changed bg-gray-50 to bg-base-200 */
+    <div className="min-h-screen flex items-center justify-center bg-base-200">
+      {/* 2. Changed bg-white to bg-base-100 */}
+      <div className="bg-base-100 p-8 rounded-lg shadow-md w-full max-w-sm text-center space-y-4">
+        {/* 3. Changed text-gray-800 to text-base-content */}
+        <h1 className="text-2xl font-bold text-base-content">Dashboard</h1>
+        {/* 4. Changed text-red-500 to text-error */}
+        {error && <p className="text-error text-sm">{error}</p>}
         {user && (
           <div className="space-y-2">
-            <p className="text-gray-600">Logged in as</p>
-            <p className="font-semibold text-gray-800">{user.email}</p>
+            {/* 5. Changed text-gray-600 to text-base-content with lower opacity */}
+            <p className="text-base-content/70">Logged in as</p>
+            {/* 6. Changed text-gray-800 to text-base-content */}
+            <p className="font-semibold text-base-content">{user.email}</p>
           </div>
         )}
-        {!user && !error && <p className="text-gray-400">Loading...</p>}
+        {/* 7. Changed text-gray-400 to standard loading text indicator helper */}
+        {!user && !error && <p className="text-base-content/40">Loading...</p>}
+        {/* 8. Swapped custom background utilities for the native btn-error class */}
         <button
           onClick={handleLogout}
-          className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700"
+          className="btn btn-error w-full"
         >
           Logout
         </button>

@@ -7,8 +7,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    // Add data-theme="dark" right here!
+    <html lang="en" data-theme="dark">
+      <body className="antialiased">
+        {children}
+      </body>
     </html>
   );
 }
+
