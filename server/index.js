@@ -7,18 +7,41 @@ const requireAuth = require('./middleware/auth');
 require('dotenv').config();
 
 const app = express();
-const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:3000').split(',').map((origin) => origin.trim()).filter(Boolean);
+
+// Parse explicit origins from environment variables
+const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:3000')
+  .split(',')
+  .map((origin) => origin.trim().replace(/\/$/, '')) // Clean trailing slashes
+  .filter(Boolean);
+
 app.use(cors({
-  origin(origin, callback){
-    if(!origin || allowedOrigins.includes(origin) || /^https:\/\/[^/]+\.vercel\.app$/.test(origin)){
+  origin(origin, callback) {
+    // 1. Allow local dev tools / server-to-server calls where origin is undefined
+    if (!origin) {
       return callback(null, true);
     }
+
+    // Clean incoming origin trailing slash for reliable matching
+    const cleanOrigin = origin.replace(/\/$/, '');
+
+    // 2. Match exact explicit origins or check if it matches a Vercel subdomain setup
+    const isExplicitlyAllowed = allowedOrigins.includes(cleanOrigin);
+    const isVercelSubdomain = /^https:\/\/.*\.vercel\.app$/.test(cleanOrigin);
+
+    if (isExplicitlyAllowed || isVercelSubdomain) {
+      return callback(null, true);
+    }
+
+    // Fail gracefully with a descriptive log for debugging
+    console.error(`CORS Blocked Origin: ${origin}`);
     return callback(new Error('Origin is not allowed by CORS'));
   },
+  credentials: true, // Recommended: allows cross-origin cookies or auth headers if needed later
 }));
+
 app.use(express.json());
 
-// Health check — useful for confirming Render deploy is alive
+// Health check — useful for confirming Render/Vercel deploy is alive
 app.get('/', (req, res) => {
   res.json({ status: 'ok' });
 });
