@@ -1,30 +1,24 @@
 'use client';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { signUpEmail } from '@/app/actions';
 
 export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Registration failed');
-
-      localStorage.setItem('token', data.token);
-      router.push('/dashboard');
+      const formData = new FormData(e.currentTarget);
+      const result = await signUpEmail(formData);
+      if (result?.error) {
+        throw new Error(result.error);
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -43,6 +37,7 @@ export default function Register() {
         {/* 4. Swapped standard borders for input utility components */}
         <input
           type="email"
+          name="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -51,6 +46,7 @@ export default function Register() {
         />
         <input
           type="password"
+          name="password"
           placeholder="Password (min 6 characters)"
           value={password}
           onChange={(e) => setPassword(e.target.value)}

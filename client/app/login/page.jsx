@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { signInEmail, signInSocial } from '@/app/actions';
 import Link from 'next/link';
 
 export default function LoginPage() {
@@ -8,26 +8,30 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-      console.log(process.env.NEXT_PUBLIC_API_URL);
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Login failed');
-
-      localStorage.setItem('token', data.token);
-      router.push('/dashboard');
+      const formData = new FormData(e.currentTarget);
+      const result = await signInEmail(formData);
+      if (result?.error) {
+        throw new Error(result.error);
+      }
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    try {
+      await signInSocial('google');
+    } catch (err) {
+      setError('Google sign-in failed');
     } finally {
       setLoading(false);
     }
@@ -45,6 +49,7 @@ export default function LoginPage() {
         {/* 5. Swapped raw borders for DaisyUI input styling */}
         <input
           type="email"
+          name="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -53,6 +58,7 @@ export default function LoginPage() {
         />
         <input
           type="password"
+          name="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -67,10 +73,19 @@ export default function LoginPage() {
         >
           {loading ? 'Logging in...' : 'Login'}
         </button>
+        <div className="divider">OR</div>
+        <button
+          type="button"
+          onClick={handleGoogleSignIn}
+          disabled={loading}
+          className="btn btn-outline w-full"
+        >
+          Sign in with Google
+        </button>
         {/* 7. Altered text color to scale with the active theme */}
         <p className="text-sm text-base-content/70 text-center">
           No account yet?{' '}
-          <Link href="/register" className="link link-primary">
+          <Link href="/register" className="link link-primary font-semibold">
             Register
           </Link>
         </p>
