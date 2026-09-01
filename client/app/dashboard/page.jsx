@@ -17,7 +17,8 @@ export default async function Dashboard() {
         <h1 className="text-2xl font-bold text-base-content">Dashboard</h1>
         <div className="space-y-2">
           <p className="text-base-content/70">Logged in as</p>
-          <p className="font-semibold text-base-content">{session.user.email}</p>
+          <p className="text-base-content">Name: <span className="font-semibold text-base-content">{session.user.name}</span></p>
+          <p className="text-base-content">Email: <span className="font-semibold text-base-content">{session.user.email}</span></p>
         </div>
         <form action={signOutUser}>
           <button

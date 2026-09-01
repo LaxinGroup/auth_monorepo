@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { signUpEmail } from '@/app/actions';
 
 export default function Register() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -35,6 +36,15 @@ export default function Register() {
         <h1 className="text-2xl font-bold text-base-content">Create account</h1>
         {error && <p className="text-error text-sm">{error}</p>}
         {/* 4. Swapped standard borders for input utility components */}
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="input input-bordered w-full"
+          required
+        />
         <input
           type="email"
           name="email"
