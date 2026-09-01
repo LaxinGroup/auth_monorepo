@@ -73,15 +73,6 @@ export default function LoginPage() {
         >
           {loading ? 'Logging in...' : 'Login'}
         </button>
-        <div className="divider">OR</div>
-        <button
-          type="button"
-          onClick={handleGoogleSignIn}
-          disabled={loading}
-          className="btn btn-outline w-full"
-        >
-          Sign in with Google
-        </button>
         {/* 7. Altered text color to scale with the active theme */}
         <p className="text-sm text-base-content/70 text-center">
           No account yet?{' '}
